@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs"
 import { prisma } from "../../../../infra/database"
+import { auditLog } from "../../../shared/audit/audit"
 import { ConflictError } from "../../../shared/errors/ConflictError"
 
 interface CreateUserInput {
@@ -9,6 +10,7 @@ interface CreateUserInput {
   role: "ADMIN" | "MANAGER" | "USER"
   unitId?: string
   organizationId: string
+  adminId: string
 }
 
 export async function createUser(data: CreateUserInput) {
@@ -22,7 +24,7 @@ export async function createUser(data: CreateUserInput) {
 
   const passwordHash = await bcrypt.hash(data.password, 10)
 
-  return prisma.user.create({
+  const createdUser = await prisma.user.create({
     data: {
       name: data.name,
       email: data.email,
@@ -40,4 +42,13 @@ export async function createUser(data: CreateUserInput) {
       createdAt: true,
     },
   })
+
+  await auditLog({
+    action: "CREATE_USER",
+    entity: "User",
+    entityId: createdUser.id,
+    userId: data.adminId,
+  })
+
+  return createUser
 }

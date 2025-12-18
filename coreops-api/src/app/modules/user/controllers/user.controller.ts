@@ -10,6 +10,7 @@ export async function createUserController(
     request.body,
   )
 
+  const { sub: adminId } = request.user as { sub: string }
   const { organizationId } = request.user as { organizationId: string }
 
   const user = await createUser({
@@ -19,6 +20,7 @@ export async function createUserController(
     role,
     unitId,
     organizationId,
+    adminId,
   })
 
   return reply.status(201).send(user)

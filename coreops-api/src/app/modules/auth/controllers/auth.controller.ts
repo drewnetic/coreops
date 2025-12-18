@@ -2,6 +2,8 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import { loginSchema } from "../dtos/auth.schemas"
 import { login } from "../services/auth.service"
 
+const isProd = process.env.NODE_ENV === "production"
+
 export async function loginController(
   request: FastifyRequest,
   reply: FastifyReply,
@@ -15,6 +17,7 @@ export async function loginController(
       httpOnly: true,
       path: "/",
       sameSite: "strict",
+      secure: isProd,
     })
     .send({ accessToken })
 }

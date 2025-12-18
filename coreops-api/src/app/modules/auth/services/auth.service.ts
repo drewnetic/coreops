@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs"
 import { prisma } from "../../../../infra/database"
 import { redis } from "../../../../infra/redis"
 import { app } from "../../../server"
+import { auditLog } from "../../../shared/audit/audit"
 import { ConflictError } from "../../../shared/errors/ConflictError"
 
 export async function login(email: string, password: string) {
@@ -15,6 +16,13 @@ export async function login(email: string, password: string) {
   if (!passwordMatch) {
     throw new ConflictError("Invalid credentials")
   }
+
+  await auditLog({
+    action: "LOGIN",
+    entity: "User",
+    entityId: user.id,
+    userId: user.id,
+  })
 
   await redis.del(`session:${user.id}`)
 

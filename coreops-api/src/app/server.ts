@@ -2,7 +2,7 @@ import cookie from "@fastify/cookie"
 import jwt from "@fastify/jwt"
 import Fastify from "fastify"
 import { env } from "../infra/env"
-import { authRoutes } from "./modules/auth/auth.routes"
+import { authRoutes } from "./modules/auth/routes/auth.routes"
 
 export const app = Fastify({
   logger: true,
@@ -18,7 +18,7 @@ app.register(jwt, {
   },
 })
 
-app.register(authRoutes, { prefix: "/auth" })
+app.register(authRoutes, { prefix: "/api/auth" })
 
 export async function startServer() {
   try {

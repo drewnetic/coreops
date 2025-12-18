@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs"
 import { prisma } from "../../../../infra/database"
+import { ConflictError } from "../../../shared/errors/ConflictError"
 
 export async function registerOrganizationAdmin(
   organizationName: string,
@@ -12,7 +13,7 @@ export async function registerOrganizationAdmin(
   })
 
   if (emailExists) {
-    throw new Error("Email already in use")
+    throw new ConflictError("Email already in use")
   }
 
   const passwordHash = await bcrypt.hash(password, 10)

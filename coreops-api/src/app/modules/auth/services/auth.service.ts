@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs"
 import { prisma } from "../../../../infra/database"
 import { redis } from "../../../../infra/redis"
 import { app } from "../../../server"
+import { ConflictError } from "../../../shared/errors/ConflictError"
 
 export async function login(email: string, password: string) {
   const user = await prisma.user.findUnique({ where: { email } })
@@ -12,7 +13,7 @@ export async function login(email: string, password: string) {
 
   const passwordMatch = await bcrypt.compare(password, user.passwordHash)
   if (!passwordMatch) {
-    throw new Error("Invalid credentials")
+    throw new ConflictError("Invalid credentials")
   }
 
   await redis.del(`session:${user.id}`)

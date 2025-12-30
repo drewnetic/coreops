@@ -9,6 +9,7 @@ interface AuditInput {
 }
 
 export async function auditLog(data: AuditInput) {
+  if (process.env.NODE_ENV === "test") return
   await prisma.auditLog.create({
     data: {
       action: data.action,

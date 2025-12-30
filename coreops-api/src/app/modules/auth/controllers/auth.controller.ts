@@ -12,7 +12,7 @@ export async function loginController(
 
   const { accessToken, refreshToken } = await login(email, password)
 
-  reply
+  return reply
     .setCookie("refreshToken", refreshToken, {
       httpOnly: true,
       path: "/",

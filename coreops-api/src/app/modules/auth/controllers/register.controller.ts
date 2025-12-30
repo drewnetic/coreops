@@ -12,5 +12,5 @@ export async function registerController(
 
   await registerOrganizationAdmin(organizationName, adminName, email, password)
 
-  reply.status(201).send({ message: "Orgainzation created" })
+  return reply.status(201).send({ message: "Orgainzation created" })
 }

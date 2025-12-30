@@ -1,3 +1,10 @@
-import { startServer } from "./app/server";
+import { buildApp } from "../src/app/server"
 
-startServer();
+export async function createTestServer() {
+  process.env.JWT_SECRET = "test-secret"
+
+  const app = buildApp()
+  await app.ready()
+
+  return app
+}

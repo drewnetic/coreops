@@ -1,20 +1,23 @@
 import bcrypt from "bcryptjs"
 import { prisma } from "../../../../infra/database"
 import { redis } from "../../../../infra/redis"
-import { app } from "../../../server"
 import { auditLog } from "../../../shared/audit/audit"
-import { ConflictError } from "../../../shared/errors/ConflictError"
+import {
+  signAccessToken,
+  signRefreshToken,
+} from "../../../shared/auth/token.service"
+import { UnauthorizedError } from "../../../shared/errors/UnauthorizedError"
 
 export async function login(email: string, password: string) {
   const user = await prisma.user.findUnique({ where: { email } })
 
   if (!user || !user.isActive) {
-    throw new Error("Invalid credentials")
+    throw new UnauthorizedError("Invalid credentials")
   }
 
   const passwordMatch = await bcrypt.compare(password, user.passwordHash)
   if (!passwordMatch) {
-    throw new ConflictError("Invalid credentials")
+    throw new UnauthorizedError("Invalid credentials")
   }
 
   await auditLog({
@@ -26,18 +29,13 @@ export async function login(email: string, password: string) {
 
   await redis.del(`session:${user.id}`)
 
-  const accessToken = app.jwt.sign(
-    {
-      sub: user.id,
-      role: user.role,
-      organizationId: user.organizationId,
-    },
-    {
-      expiresIn: "15m",
-    },
-  )
+  const accessToken = signAccessToken({
+    sub: user.id,
+    role: user.role,
+    organizationId: user.organizationId,
+  })
 
-  const refreshToken = app.jwt.sign({ sub: user.id }, { expiresIn: "7d" })
+  const refreshToken = signRefreshToken({ sub: user.id })
 
   await redis.set(`session:${user.id}`, refreshToken, "EX", 60 * 60 * 24 * 7)
 

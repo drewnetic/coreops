@@ -55,7 +55,7 @@ export async function createOperation(input: CreateOperationInput) {
 interface ListOperationInput {
   organizationId: string
   status?: OperationStatus
-  unitId: string
+  unitId?: string
   page: number
   limit: number
 }

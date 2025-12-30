@@ -10,18 +10,24 @@ export async function createUserController(
     request.body,
   )
 
-  const { sub: adminId } = request.user as { sub: string }
-  const { organizationId } = request.user as { organizationId: string }
+  const payload = request.user as {
+    sub: string
+    organizationId: string
+    role: string
+  }
 
-  const user = await createUser({
-    name,
-    email,
-    password,
-    role,
-    unitId,
-    organizationId,
-    adminId,
-  })
+  const user = await createUser(
+    {
+      name,
+      email,
+      password,
+      role,
+      unitId,
+      organizationId: payload.organizationId,
+      adminId: payload.sub,
+    },
+    payload,
+  )
 
   return reply.status(201).send(user)
 }

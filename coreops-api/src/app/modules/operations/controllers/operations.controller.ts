@@ -18,8 +18,7 @@ export async function createOperationController(
     request.body,
   )
 
-  const user = request.user as { organizationId: string; sub: string }
-  const ip = request.ip
+  const user = request.user as { sub: string; organizationId: string }
 
   const operation = await createOperation({
     title,
@@ -27,7 +26,7 @@ export async function createOperationController(
     unitId,
     organizationId: user.organizationId,
     actorId: user.sub,
-    ip,
+    ip: request.ip,
   })
 
   return reply.status(201).send(operation)
@@ -46,7 +45,7 @@ export async function listOperationsController(
   const result = await listOperations({
     organizationId: user.organizationId,
     status,
-    unitId: unitId ?? "",
+    unitId,
     page,
     limit,
   })

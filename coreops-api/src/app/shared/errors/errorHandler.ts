@@ -1,31 +1,41 @@
 import { FastifyError, FastifyReply, FastifyRequest } from "fastify"
 import { ZodError } from "zod"
-import { AppError } from "./AppError"
+import { ConflictError } from "./ConflictError"
+import { UnauthorizedError } from "./UnauthorizedError"
+import { NotFoundError } from "./NotFoundError"
+import { ForbiddenError } from "./ForbiddenError"
 
 export function errorHandler(
-  error: FastifyError | Error,
+  error: FastifyError,
   _request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  if (error instanceof AppError) {
-    return reply.status(error.statusCode).send({
-      message: error.message,
-    })
-  }
-
   if (error instanceof ZodError) {
-    const formattedErrors: Record<string, string> = {}
-
-    error.issues.forEach((err) => {
-      const field = err.path.join(".")
-      formattedErrors[field] = err.message
-    })
-
     return reply.status(400).send({
       message: "Validation error",
-      errors: formattedErrors,
+      errors: error.flatten().fieldErrors,
     })
   }
 
-  return reply.status(500).send({ message: "Internal server error" })
+  if (error instanceof UnauthorizedError) {
+    return reply.status(401).send({ message: error.message })
+  }
+
+  if (error instanceof ForbiddenError) {
+    return reply.status(403).send({ message: error.message })
+  }
+
+  if (error instanceof ConflictError) {
+    return reply.status(409).send({ message: error.message })
+  }
+
+  if (error instanceof NotFoundError) {
+    return reply.status(404).send({ message: error.message })
+  }
+
+  console.error(error)
+
+  return reply.status(500).send({
+    message: "Internal server error",
+  })
 }

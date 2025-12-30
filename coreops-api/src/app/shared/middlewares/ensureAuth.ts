@@ -2,8 +2,18 @@ import { FastifyReply, FastifyRequest } from "fastify"
 
 export async function ensureAuth(request: FastifyRequest, reply: FastifyReply) {
   try {
-    await request.jwtVerify()
+    const payload = await request.jwtVerify<{
+      sub: string
+      role: "ADMIN" | "MANAGER" | "USER"
+      organizationId: string
+    }>()
+
+    request.user = {
+      sub: payload.sub,
+      role: payload.role,
+      organizationId: payload.organizationId,
+    }
   } catch {
-    reply.status(401).send({ message: "Unauthorized" })
+    return reply.status(401).send({ message: "Unauthorized" })
   }
 }

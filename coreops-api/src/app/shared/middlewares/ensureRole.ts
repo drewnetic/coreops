@@ -4,14 +4,14 @@ type Role = "ADMIN" | "MANAGER" | "USER"
 
 export function ensureRole(roles: Role[]) {
   return async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const { role } = request.user as { role: Role }
+    const user = request.user as { role?: Role } | undefined
 
-      if (!roles.includes(role)) {
-        return reply.status(403).send({ message: "Forbidden" })
-      }
-    } catch {
+    if (!user || !user.role) {
       return reply.status(401).send({ message: "Unauthorized" })
+    }
+
+    if (!roles.includes(user.role)) {
+      return reply.status(403).send({ message: "Forbidden" })
     }
   }
 }

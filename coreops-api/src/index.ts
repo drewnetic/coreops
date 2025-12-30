@@ -1,10 +1,20 @@
-import { buildApp } from "../src/app/server"
+import { buildApp } from "./app/server"
+import { env } from "./infra/env"
 
-export async function createTestServer() {
-  process.env.JWT_SECRET = "test-secret"
-
+async function bootstrap() {
   const app = buildApp()
-  await app.ready()
 
-  return app
+  try {
+    await app.listen({
+      port: Number(env.PORT),
+      host: "0.0.0.0",
+    })
+
+    console.log(`🚀 Server running on port ${env.PORT}`)
+  } catch (err) {
+    app.log.error(err)
+    process.exit(1)
+  }
 }
+
+bootstrap()

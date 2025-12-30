@@ -1,5 +1,5 @@
 // tests/helpers/createTestServer.ts
-import { buildApp } from "../../app/server"
+import { buildApp } from "../../server"
 
 let app: any
 

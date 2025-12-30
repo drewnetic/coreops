@@ -1,5 +1,5 @@
-import { buildApp } from "./app/server"
 import { env } from "./infra/env"
+import { buildApp } from "./server"
 
 async function bootstrap() {
   const app = buildApp()

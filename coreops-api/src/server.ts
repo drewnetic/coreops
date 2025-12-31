@@ -7,6 +7,8 @@ import { unitRoutes } from "./app/modules/units/routes/units.routes"
 import { usersRoutes } from "./app/modules/user/routes/users.routes"
 import { errorHandler } from "./app/shared/errors/errorHandler"
 import { env } from "./infra/env"
+import swagger from "@fastify/swagger"
+import fastifyApiReference from "@scalar/fastify-api-reference"
 
 export function buildApp() {
   const app = Fastify({
@@ -22,6 +24,32 @@ export function buildApp() {
       signed: false,
     },
   })
+
+  if (env.NODE_ENV !== "test") {
+    app.register(swagger, {
+      openapi: {
+        info: {
+          title: "CoreOps API",
+          description: "CoreOps backend API documentation",
+          version: "1.0.0",
+        },
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "JWT",
+            },
+          },
+        },
+        security: [{ bearerAuth: [] }],
+      },
+    })
+
+    app.register(fastifyApiReference, {
+      routePrefix: "/docs",
+    })
+  }
 
   app.setErrorHandler(errorHandler)
 

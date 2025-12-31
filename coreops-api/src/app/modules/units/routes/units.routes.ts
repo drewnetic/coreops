@@ -9,13 +9,60 @@ import {
 export async function unitRoutes(app: FastifyInstance) {
   app.post(
     "/",
-    { preHandler: [ensureAuth, ensureRole(["ADMIN"])] },
+    {
+      preHandler: [ensureAuth, ensureRole(["ADMIN"])],
+      schema: {
+        tags: ["Units"],
+        summary: "Create a unit",
+        security: [{ bearerAuth: [] }],
+        body: {
+          type: "object",
+          required: ["name"],
+          properties: {
+            name: { type: "string", examples: ["Main Unit"] },
+          },
+        },
+        response: {
+          201: {
+            type: "object",
+            properties: {
+              id: { type: "string", format: "uuid" },
+              name: { type: "string" },
+              createdAt: { type: "string", format: "date-time" },
+            },
+          },
+          409: {
+            description: "Unit already exists",
+          },
+        },
+      },
+    },
     createUnitController,
   )
 
   app.get(
     "/",
-    { preHandler: [ensureAuth, ensureRole(["ADMIN", "MANAGER"])] },
+    {
+      preHandler: [ensureAuth, ensureRole(["ADMIN", "MANAGER"])],
+      schema: {
+        tags: ["Units"],
+        summary: "List units",
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+                createdAt: { type: "string", format: "date-time" },
+              },
+            },
+          },
+        },
+      },
+    },
     listUnitsController,
   )
 }

@@ -1,5 +1,7 @@
 # CoreOps API
 
+🌎 **Read this in:** [English](README.md) | [Português](README-pt-BR.md)
+
 CoreOps is a backend API designed to manage organizations, users, units, and operational workflows with secure authentication, role-based access control (RBAC), and full audit logging.
 
 The project follows a modular architecture focused on scalability, maintainability, and real-world production practices.
@@ -35,6 +37,7 @@ The API is live and available for testing.
 Use the following credentials to explore the API:
 
 **Admin User**
+
 - Email: `demo@coreops.dev`
 - Password: `demo123`
 
@@ -73,6 +76,7 @@ Shared logic (authentication, errors, audit logs, environment, redis) lives in d
 ## 🔐 Authentication & Authorization
 
 ### Authentication
+
 - JWT-based authentication
 - Access Token & Refresh Token strategy
 - Tokens include:
@@ -81,6 +85,7 @@ Shared logic (authentication, errors, audit logs, environment, redis) lives in d
   - `organizationId`
 
 ### Authorization (RBAC)
+
 - Role-based access control using:
   - `ensureAuth`
   - `ensureRole`
@@ -94,19 +99,23 @@ Shared logic (authentication, errors, audit logs, environment, redis) lives in d
 ## 📦 Modules
 
 ### Auth
+
 - Register organization and admin user
 - Login
 - Token generation
 
 ### Users
+
 - Create users (ADMIN only)
 - Organization scoped access
 
 ### Units
+
 - Create and list organizational units
 - Organization scoped access
 
 ### Operations
+
 - Create operations linked to units
 - List operations with pagination and filters
 - Update operation status
@@ -116,37 +125,42 @@ Shared logic (authentication, errors, audit logs, environment, redis) lives in d
 ## 🔌 API Endpoints Overview
 
 ### Auth
+
 - `POST /api/auth/login`
 - `POST /api/auth/refresh`
 - `POST /api/auth/logout`
 
 ### Users
+
 - `POST /api/users`
 - `GET /api/users`
 
 ### Units
+
 - `POST /api/units`
 - `GET /api/units`
 
 ### Operations
+
 - `POST /api/operations`
 - `GET /api/operations`
 - `PATCH /api/operations/:id/status`
 
-
---
+---
 
 ## 🧪 Tests
 
 The project includes **integration tests** using Vitest and Supertest.
 
 ### Covered scenarios
+
 - Authentication flow
 - RBAC enforcement
 - Operations lifecycle
 - Organization scoping
 
 ### Run tests
+
 ```bash
 npm run test
 ```
@@ -172,20 +186,24 @@ JWT_SECRET=your-secret-key
 ## ▶️ Running the Project
 
 ### Install dependencies
+
 ```bash
 cd coreops-api
 npm install
 ```
 
 ### Run database migrations
+
 ```
 npx prisma migrate deploy
 ```
 
 ### Start development server
+
 ```
 npm run dev
 ```
+
 ---
 
 ## 🚀 Deployment & Infrastructure
@@ -207,8 +225,10 @@ The application is production-ready and follows 12-factor app principles.
 - Refresh tokens are stored securely and rotated
 - Organization-level data isolation enforced at service layer
 - RBAC enforced via middleware
-- Rate limiting enabled to prevent abuse
-
+- HTTP security headers via Helmet
+- CORS with allowlist
+- Global rate limiting
+- Stricter rate limiting on auth route
 
 ---
 
@@ -230,7 +250,7 @@ src/
 |
 ├── infra/
 │   ├── database/
-│   ├── redis/
+│   ├── env/
 │   ├── logger/
 │   └── redis/
 |
@@ -251,24 +271,27 @@ src/
 ## 📝 Audit Logs
 
 Every critical action is logged using the audit system, including:
+
 - User creation
 - Operation creation
 - Operation status updates
 
 Audit logs store:
+
 - Action
 - Entity
 - Entity ID
 - User ID
 - IP (when available)
 
---- 
+---
 
 ## ❗ Error Handling
 
 Centralized error handling using a global Fastify error handler.
 
 Handled errors:
+
 - Validation errors
 - Authentication errors
 - Authorization errors
@@ -279,12 +302,13 @@ Handled errors:
 
 ## 🛣️ Roadmap
 
- - ✔️ Docker support
- - ✔️ API documentation (Swagger)
- - ✔️ Refresh token rotation
- - ✔️ Rate limiting
- - ✔️ Background jobs
- - ✔️ Observability (logs & metrics)
+- ✔️ Docker support
+- ✔️ API documentation (Swagger / Scalar)
+- ✔️ Refresh token rotation
+- ✔️ Background jobs
+- ✔️ Observability (logs & metrics)
+- ✔️ Rate limiting
+- ✔️ CORS & security hardening
 
 ---
 
@@ -294,7 +318,6 @@ Handled errors:
 
 - GitHub: https://github.com/drewnetic
 - LinkedIn: https://linkedin.com/in/andrew-gouvêa-551b052a6
-
 
 ---
 

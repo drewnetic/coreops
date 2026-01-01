@@ -22,21 +22,21 @@ export async function operationsRoutes(app: FastifyInstance) {
           properties: {
             title: { type: "string", examples: ["Air conditioning broken"] },
             description: { type: "string", nullable: true },
-            unitId: { type: "string", format: "uuid" },
+            unitId: { type: "string" },
           },
         },
         response: {
           201: {
             type: "object",
             properties: {
-              id: { type: "string", format: "uuid" },
+              id: { type: "string" },
               title: { type: "string" },
               description: { type: "string", nullable: true },
               status: {
                 type: "string",
                 enum: ["OPEN", "IN_PROGRESS", "DONE", "CANCELED"],
               },
-              unitId: { type: "string", format: "uuid" },
+              unitId: { type: "string" },
               createdAt: { type: "string", format: "date-time" },
             },
           },
@@ -64,7 +64,7 @@ export async function operationsRoutes(app: FastifyInstance) {
               type: "string",
               enum: ["OPEN", "IN_PROGRESS", "DONE", "CANCELED"],
             },
-            unitId: { type: "string", format: "uuid" },
+            unitId: { type: "string" },
             page: { type: "number", default: 1 },
             limit: { type: "number", default: 10 },
           },
@@ -73,7 +73,25 @@ export async function operationsRoutes(app: FastifyInstance) {
           200: {
             type: "object",
             properties: {
-              items: { type: "array", items: { type: "object" } },
+              items: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: { type: "string" },
+                    title: { type: "string" },
+                    description: { type: "string" },
+                    status: { type: "string" },
+                    unitId: {
+                      type: "string",
+                      pattern:
+                        "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+                    },
+                    createdAt: { type: "string", format: "date-time" },
+                    updatedAt: { type: "string", format: "date-time" },
+                  },
+                },
+              },
               meta: {
                 type: "object",
                 properties: {
@@ -103,7 +121,7 @@ export async function operationsRoutes(app: FastifyInstance) {
           type: "object",
           required: ["id"],
           properties: {
-            id: { type: "string", format: "uuid" },
+            id: { type: "string" },
           },
         },
         body: {

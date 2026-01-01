@@ -34,7 +34,7 @@ export async function usersRoutes(app: FastifyInstance) {
           201: {
             type: "object",
             properties: {
-              id: { type: "string", format: "uuid" },
+              id: { type: "string" },
               name: { type: "string" },
               email: { type: "string" },
               role: { type: "string" },

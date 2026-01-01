@@ -26,7 +26,7 @@ export async function unitRoutes(app: FastifyInstance) {
           201: {
             type: "object",
             properties: {
-              id: { type: "string", format: "uuid" },
+              id: { type: "string" },
               name: { type: "string" },
               createdAt: { type: "string", format: "date-time" },
             },
@@ -54,7 +54,7 @@ export async function unitRoutes(app: FastifyInstance) {
             items: {
               type: "object",
               properties: {
-                id: { type: "string", format: "uuid" },
+                id: { type: "string" },
                 name: { type: "string" },
                 createdAt: { type: "string", format: "date-time" },
               },

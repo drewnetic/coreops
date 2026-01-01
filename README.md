@@ -6,6 +6,42 @@ The project follows a modular architecture focused on scalability, maintainabili
 
 ---
 
+## 🎯 Project Goal
+
+CoreOps was built to simulate a real-world multi-tenant operations platform,
+focusing on:
+
+- Clean architecture
+- Secure authentication
+- Organization-scoped data
+- Production-grade deployment
+
+This project was designed as a portfolio piece to demonstrate backend
+engineering skills beyond CRUD APIs.
+
+---
+
+## 🌐 Live Demo & API Docs
+
+The API is live and available for testing.
+
+- **Base URL:** https://coreops-production.up.railway.app
+- **API Docs (Scalar):** https://coreops-production.up.railway.app/docs/
+
+> No installation required — test directly from the browser.
+
+## 🔑 Demo Credentials
+
+Use the following credentials to explore the API:
+
+**Admin User**
+- Email: `demo@coreops.dev`
+- Password: `demo123`
+
+This user belongs to a demo organization and has full access.
+
+---
+
 ## 🚀 Tech Stack
 
 - **Node.js**
@@ -77,6 +113,29 @@ Shared logic (authentication, errors, audit logs, environment, redis) lives in d
 
 ---
 
+## 🔌 API Endpoints Overview
+
+### Auth
+- `POST /api/auth/login`
+- `POST /api/auth/refresh`
+- `POST /api/auth/logout`
+
+### Users
+- `POST /api/users`
+- `GET /api/users`
+
+### Units
+- `POST /api/units`
+- `GET /api/units`
+
+### Operations
+- `POST /api/operations`
+- `GET /api/operations`
+- `PATCH /api/operations/:id/status`
+
+
+--
+
 ## 🧪 Tests
 
 The project includes **integration tests** using Vitest and Supertest.
@@ -127,6 +186,30 @@ npx prisma migrate deploy
 ```
 npm run dev
 ```
+---
+
+## 🚀 Deployment & Infrastructure
+
+- Deployed using **Docker**
+- Hosted on **Railway**
+- PostgreSQL hosted on **Supabase**
+- Redis hosted on **Upstash (TLS enabled)**
+- Prisma migrations applied automatically on deploy
+
+The application is production-ready and follows 12-factor app principles.
+
+---
+
+## 🔒 Security Considerations
+
+- Passwords are hashed using bcrypt
+- JWT tokens are signed with environment-based secrets
+- Refresh tokens are stored securely and rotated
+- Organization-level data isolation enforced at service layer
+- RBAC enforced via middleware
+- Rate limiting enabled to prevent abuse
+
+
 ---
 
 ## 📁 Project Structure
@@ -202,6 +285,16 @@ Handled errors:
  - ✔️ Rate limiting
  - ✔️ Background jobs
  - ✔️ Observability (logs & metrics)
+
+---
+
+## 👤 Author
+
+**Andrew Gouvêa**
+
+- GitHub: https://github.com/drewnetic
+- LinkedIn: https://linkedin.com/in/andrew-gouvêa-551b052a6
+
 
 ---
 

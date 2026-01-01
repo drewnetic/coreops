@@ -10,7 +10,14 @@ import {
 export async function authRoutes(app: FastifyInstance) {
   app.post(
     "/login",
+
     {
+      config: {
+        rateLimit: {
+          max: 5,
+          timeWindow: "1 minute",
+        },
+      },
       schema: {
         tags: ["Auth"],
         summary: "Login user",

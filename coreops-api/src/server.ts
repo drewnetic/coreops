@@ -40,7 +40,7 @@ export function buildApp() {
       if (allowedOrigins.includes(origin)) {
         cb(null, true)
       } else {
-        cb(new Error("Not alloweb by CORS"), false)
+        cb(new Error("Not allowed by CORS"), false)
       }
     },
     credentials: true,
@@ -48,21 +48,22 @@ export function buildApp() {
 
   app.register(helmet, {
     global: true,
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'"],
-      },
-    },
+    contentSecurityPolicy: false,
   })
 
-  app.addHook("onSend", async (req, reply, payload) => {
-    if (req.url.startsWith("/docs")) {
-      reply.removeHeader("content-security-policy")
-    }
+  app.addHook("onRequest", async (req, reply) => {
+    if (req.url.startsWith("/docs")) return
 
-    return payload
+    reply.header(
+      "Content-Security-Policy",
+      [
+        "default-src 'self'",
+        "script-src 'self'",
+        "style-src 'self'",
+        "img-src 'self' data:",
+        "connect-src 'self'",
+      ].join("; "),
+    )
   })
 
   app.register(rateLimit, {

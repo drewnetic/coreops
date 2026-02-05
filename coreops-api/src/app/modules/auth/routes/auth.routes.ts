@@ -10,7 +10,6 @@ import {
 export async function authRoutes(app: FastifyInstance) {
   app.post(
     "/login",
-
     {
       config: {
         rateLimit: {
